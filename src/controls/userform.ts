@@ -1,88 +1,44 @@
-import { Request, Response } from "express"
-import bcrypt from "bcrypt";
-import users from "../mode/Users";
-import { SendMail } from "../utils/onetimeverification";
-//Definfe a UserInterfase
-interface User{
-    Username:string,
-    Email:string;
-    Password:string; //Add password fieald
-    DateofBirth:String;
-}
+// userController.ts
+import { Request, Response, NextFunction } from "express";
+import UserSchema from "../models/Users";  // Assuming you're using Mongoose or similar
+import tryCatch from "../middlewares/tryCatch";
+import bcrypt from 'bcrypt';
 
-const generateOtp=():string=>{
-  return Math.floor(100000+Math.random()*900000).toString()
-}
+export const CreateUser = tryCatch(async (req, res) => {
+  const { username, email, password ,dateofbirth} = req.body;
 
-export const createUser=async(req:Request,res:Response) =>{
-const {Username,Email,Password,DateofBirth}:User=req.body;
+  const checkEmail=await UserSchema.findOne({account:email});
+  const hashedPassword=await bcrypt.hash(password,10);
+  // console.log("datas",username,email,password,hashedPassword)
+ if(checkEmail){
+  res.status(300).json({message:"Email already existed"}); return}
 
-console.log("name,email,password,DateofBirth"); 
-// res.status(200).json({a:req.body.name});
-// validate the input
-if(!Username||!Email|| !Password|| !DateofBirth ){
-    res.status(400).json({message:"Name email and password are required"});
-    return;
-}
-try{
-    const salt=bcrypt.genSalt(10);
-    console.log(salt)
-    const hashedPassword=await bcrypt.hash(Password,10);//10 is salt rounds
-    //Create new User with hashed password
-    const  newUser= new users({
-        Username,
-        Email,
-        DateofBirth,
-        Password:hashedPassword,//Store the hashed password
-    });
-    //Store the user
-    await newUser.save();
-    res.status(201).json(newUser);
-}catch(err){
-    res.status(500).json({message:"Error createing User",err});
-}
+  if(!username||!email||!password
+    ||!dateofbirth
+  ){
+    res.status(300).json({message:"emai or password or name is required"})
+    return
+  }
+  const newuser=new UserSchema({
+    username,account:email,
+    dateofbirth,
+    password:hashedPassword
+  })
+  await newuser.save();
+  res.status(200).json({message:"Registration complited"});
+});
 
-}
+export const GetallProduct=tryCatch(async(req,res,next)=>{
+console.log("Hellow this is all product get api");
 
+res.send({message:"Allproduct page"});
+});
 
-//POST methode to login a user (for exmple purpose)
-
-// 
-export const loginUser = async (req: Request, res: Response): Promise<void> => {
-    const { email, password } = req.body;
-  
-    try {
-
-if(email){
-  
-  const otp=generateOtp();
-  const otpExpiry=Date.now()+10*60*1000;
-
-  await SendMail(email,otp);
-  return;
-}
-
-      // Find the user by email
-      const userinfo = await users.findOne({ email }); // Await the result of findOne
-  
-      if (!userinfo) {
-        res.status(400).json({ message: 'Invalid Email or password' });
-        return;
-      }
-  
-      // Compare the password with the hashed password
-      const isPasswordValid = await bcrypt.compare(password, userinfo.password);
-  
-      if (!isPasswordValid) {
-        res.status(400).json({ message: 'Invalid email or Password' });
-        return;
-      }
-  
-      // Send success response
-      res.status(200).json({ message: "Login successful" });
-  
-    } catch (error) {
-      // Handle errors
-      res.status(500).json({ message: 'Error occurred during login', error});
-    }
-  };
+export const GetMenProduct=tryCatch(async(req,res,next)=>{
+  console.log("This is Men product api");
+  res.send({Message:"Men product page"})
+});
+export const GetWomenProduct=tryCatch(async(req,res,next)=>{
+  console.log("this is women prodct page");
+  res.send({message:"women Product page"});
+});

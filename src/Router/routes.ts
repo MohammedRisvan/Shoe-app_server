@@ -1,49 +1,15 @@
 
 
 import {Router} from "express";
-import {createUser,loginUser}from "../controls/userform";
+import {CreateUser, GetallProduct, GetMenProduct, GetWomenProduct} from "../controls/userform";
+// import tryCatch from "../middlewares/tryCatch";
+
 
 const router=Router();
 
-router.post('/Signup',createUser);
-router.post('/Signin',loginUser);
+router.post('/register',CreateUser);
+router.get('/getallp',GetallProduct);
+router.get('/getMenp',GetMenProduct);
+router.get('/getWomenp',GetWomenProduct)
 
-
-
-
-
-// //sample data
-// let items=[{id:1,name:"sample Item"}];
-
-// //Get methode
-// router.get('/items',(req,res)=>{
-//     res.json(items);
-// });
-
-// //Post Methode
-// router.post('/items',(req,res)=>{
-//     const newItem={id:items.length+1,...req.body};
-//     items.push(newItem);
-//     res.status(201).json(newItem);
-// });
-
-// //Put methode
-// router.put('/items/:id',(req,res)=>{
-//     const id=parseInt(req.params.id);
-//     const itemIndex=items.findIndex(item=>item.id==id);
-//     if(itemIndex !== -1){
-//         items[itemIndex]={id,...req.body};
-//         res.json(items[itemIndex]);
-//     }else{
-//         res.status(404).json({message:"item not found"});
-//     }
-// })
-
-// //Delete methode
-
-// router.delete('/items/:id',(req,res)=>{
-//     const id=parseInt(req.params.id);
-//     items=items.filter(item=>item.id !==id);
-//     res.status(204).send();
-// })
 export default router;
