@@ -11,6 +11,7 @@ import cors from 'cors';
 import errorHandler from "./middlewares/errorHandeler";
 import adminRouter from "./Router/adminRouter";
 import uploadRoute from './cloudinary/uploadRoute'
+import cloudinary from "./cloudinary/cloudinaryconfig";
 // import {globalErrorHandler} from "./middlewares/globelErrorHandeler";
 // import {asyncHandeler} from "./middlewares/errorHandeler";
 //load environment variables from .env file
@@ -31,11 +32,12 @@ connectDB();
 //Enable Cors
 app.use(cors(
     {origin:'http://localhost:5173'}
-))
+));
 
 
 //Middle ware to parse JSON
 app.use(express.json());
+//cloud
 //  app.use(bodyParser.json());
 
 // cookie-parser Middleware
@@ -45,6 +47,10 @@ app.use(cookieParser())
 
 app.use('/admin',adminRouter)
 
+
+/* cloudinary upload function
+working*/
+
 //User routes from routes.ts
 
 app.use('/api',routes)
@@ -52,6 +58,7 @@ app.use('/api',routes)
 app.use(errorHandler); 
 //Image uploads
 app.use('/api', uploadRoute);
+
 //Start the server
 console.log(process.env.email,process.env.password)
 app.listen(port,()=>{
