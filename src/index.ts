@@ -23,44 +23,31 @@ const port =process.env.PORT||3000;
 //Databse Function
 connectDB();
 
-//Cloudinary upload
-// app.use(express.fileUpload({
-//     limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50MB
-//   }));
-  
-
 //Enable Cors
-app.use(cors(
-    {origin:'http://localhost:5173'}
-));
+app.use(cors({origin:'http://localhost:5173'}));
 
 
 //Middle ware to parse JSON
 app.use(express.json());
-//cloud
-//  app.use(bodyParser.json());
 
 // cookie-parser Middleware
 app.use(cookieParser())
 
 //Admin User from AdminRouter
+app.use('/admin',adminRouter);
 
-app.use('/admin',adminRouter)
-
-
-/* cloudinary upload function
-working*/
+/* cloudinary upload function working*/
 
 //User routes from routes.ts
 
-app.use('/api',routes)
+app.use('/api',routes);
 //Middle ware 
 app.use(errorHandler); 
 //Image uploads
 app.use('/api', uploadRoute);
 
 //Start the server
-console.log(process.env.email,process.env.password)
+console.log(process.env.email,process.env.password);
 app.listen(port,()=>{
-    console.log(`Server running on ${port}`)
+    console.log(`Server running on ${port}`);
 });

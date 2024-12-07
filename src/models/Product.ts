@@ -4,8 +4,9 @@ interface IProduct extends Document{
     brand:string;
     description:string;
     price:number;
+    images:[[string,string]];
     size:number[];//Avilable size in array
-    colour:string[];
+    colour:[string];
     stock:number; //Avilable Qualtity
     category:string;//Eg:.. sneakers,Running shoes,etc
     gender:'Men'|'Women'|'Unisex';
@@ -28,6 +29,11 @@ const productSchema:Schema<IProduct> =new mongoose.Schema({
         type:String,
         required:[true,"Description is required"]
     },
+    images:{
+        required:[true,"Please add images"],
+        type:[[String,String]],
+
+    },
     price:{
         type:Number,
         required:[true,"prise is required"],
@@ -44,7 +50,7 @@ const productSchema:Schema<IProduct> =new mongoose.Schema({
     stock:{
         type:Number,
         required:[true,"Stock must be Required"],
-        min:[0,"Stock can't be Nagatived"]
+        min:[0,"Stock can't be Negatived"]
     },
     category:{
         type:String,
@@ -52,7 +58,7 @@ const productSchema:Schema<IProduct> =new mongoose.Schema({
     },
     gender:{
         type:String,
-        enum:['Men','Women','Uisex'],
+        enum:['Men','Women','Unisex'],
         required:[true,"Gender is required"]
     },
     releaseDate:{

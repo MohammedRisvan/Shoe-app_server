@@ -2,7 +2,8 @@ import mongoose from 'mongoose';
 
 const connectDB=async():Promise<void>=>{
     try{
-        await mongoose.connect('mongodb://localhost:27017/shoes');
+        let url=process.env.mongoURL
+        await mongoose.connect(`${url}`);
         console.log("Mongodb is connected");
     }catch(err){
         console.error("Error connectinig to MongoDB:",err);

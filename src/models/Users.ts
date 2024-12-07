@@ -3,9 +3,11 @@ import mongoose ,{Document,Schema} from 'mongoose';
 //Define an interface for the user document
 export interface UsersI extends Document {
     username:string;
-    account:string;
+    email:String;
     dateofbirth:Date;
+    phone:number;
     password:string;
+    block:boolean;
     createAt:Date;
 }
 
@@ -16,7 +18,7 @@ const UserSchema: Schema<UsersI> =new Schema({
         required:true,
         // trim:true
     },
-    account:{
+    email:{
         type: String,
         required: true, // Ensure email is always provided
          unique: true, // Enforce uniqueness
@@ -25,9 +27,15 @@ const UserSchema: Schema<UsersI> =new Schema({
         type:Date,
         required:true,
     },
+    phone:{type:Number,maxlength:10,
+        minlength:10},
     password:{
         type:String,
         required:true,
+    },
+    block:{
+        type:Boolean,
+        default:false
     },
     createAt:{
         type:Date,
